@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
-<script>
-  window.TrackJS && TrackJS.install({ 
-    token: "c33742a5e4f94a57844e68b85e6446d5"
-    // for more configuration options, see https://docs.trackjs.com
-    });
-</script>
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -92,7 +86,13 @@
       <button>Trigger a Global Error</button>
     </section>
   </main>
-
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "c33742a5e4f94a57844e68b85e6446d5"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
   <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
@@ -257,7 +257,7 @@
         'Message:', message,
         'Source:', source + ':' + lineno + ':' + colno
       );
-      return true;
+      //return true;
     };
   </script>
 </body>
