@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+<script>
+  window.TrackJS && TrackJS.install({ 
+    token: "c33742a5e4f94a57844e68b85e6446d5"
+    // for more configuration options, see https://docs.trackjs.com
+    });
+</script>
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -95,13 +101,164 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      try {
+        class InputError extends Error {
+          constructor(message) {
+            super(message);
+            this.name = 'InputError';
+          }
+        }
+        class CalculationError extends Error {
+          constructor(message) {
+            super(message);
+            this.name = 'CalculationError';
+          }
+        }
+
+        if (firstNum.trim() === '' || secondNum.trim() === '') {
+          throw new InputError('Both fields must be filled in.');
+        }
+
+        let num1 = Number(firstNum);
+        let num2 = Number(secondNum);
+        if (isNaN(num1) || isNaN(num2)) {
+          throw new InputError('Inputs must be valid numbers.');
+        }
+
+        let result = eval(`${num1} ${operator} ${num2}`);
+
+        if (!isFinite(result)) {
+          throw new CalculationError('Calculation result is not finite.');
+        }
+
+        output.innerHTML = result;
+      } catch (err) {
+        if (err.name === 'InputError' || err.name === 'CalculationError') {
+          console.error(`${err.name}: ${err.message}`);
+          output.innerHTML = err.message;
+        } else {
+          console.error('Unexpected error:', err);
+          output.innerHTML = 'An unexpected error occurred.';
+        }
+      } finally {
+        console.log('Calculation attempt completed');
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+    const [
+      logBtn,
+      errorBtn,
+      countBtn,
+      warnBtn,
+      assertBtn,
+      clearBtn,
+      dirBtn,
+      dirxmlBtn,
+      groupStartBtn,
+      groupEndBtn,
+      tableBtn,
+      timeStartBtn,
+      timeEndBtn,
+      traceBtn,
+      globalErrorBtn
+    ] = errorBtns;
+
+    const sampleData = {
+      name: 'Alice',
+      age: 27,
+      hobbies: ['reading', 'gaming', 'hiking'],
+      address: {
+        city: 'Springfield',
+        state: 'IL'
+      }
+    };
+
+    logBtn.addEventListener('click', () => {
+      console.log('Console Log Demo:', sampleData);
+    });
+
+    errorBtn.addEventListener('click', () => {
+      console.error('Console Error Demo: Something went wrong!');
+    });
+
+    countBtn.addEventListener('click', () => {
+      console.count('Button clicks so far');
+    });
+
+    warnBtn.addEventListener('click', () => {
+      console.warn('Console Warn Demo: This is a warning message.');
+    });
+
+    assertBtn.addEventListener('click', () => {
+      console.assert(false, 'Console Assert Demo: This assertion failed!');
+    });
+
+    clearBtn.addEventListener('click', () => {
+      console.clear();
+    });
+
+    dirBtn.addEventListener('click', () => {
+      console.dir(sampleData);
+    });
+
+    dirxmlBtn.addEventListener('click', () => {
+      console.dirxml(document.body);
+    });
+
+    groupStartBtn.addEventListener('click', () => {
+      console.group('My Sample Group');
+      console.log('Inside the group: message 1');
+      console.log('Inside the group: message 2');
+    });
+
+    groupEndBtn.addEventListener('click', () => {
+      console.groupEnd();
+    });
+
+    tableBtn.addEventListener('click', () => {
+      console.table([
+        { a: 1, b: 2, c: 3 },
+        { a: 4, b: 5, c: 6 },
+        { a: 7, b: 8, c: 9 }
+      ]);
+    });
+
+    timeStartBtn.addEventListener('click', () => {
+      console.time('SampleTimer');
+    });
+
+    timeEndBtn.addEventListener('click', () => {
+      console.timeEnd('SampleTimer');
+    });
+
+    traceBtn.addEventListener('click', () => {
+      function firstFunction() {
+        secondFunction();
+      }
+      function secondFunction() {
+        thirdFunction();
+      }
+      function thirdFunction() {
+        console.trace('Stack Trace Demo');
+      }
+      firstFunction();
+    });
+
+    globalErrorBtn.addEventListener('click', () => {
+      nonExistentFunctionCall();
+    });
+
+    window.onerror = function (message, source, lineno, colno, errorObj) {
+      console.error(
+        'Global error caught →',
+        'Message:', message,
+        'Source:', source + ':' + lineno + ':' + colno
+      );
+      return true;
+    };
   </script>
 </body>
 
